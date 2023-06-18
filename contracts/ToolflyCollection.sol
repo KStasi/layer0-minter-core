@@ -15,7 +15,9 @@ error NotPaidMint();
 contract ToolflyCollection is Ownable, ERC721URIStorage, NonblockingLzApp {
     uint256 public counter;
     string public defaultTokenURI = "https://toolfly.xyz/token";
-    uint public cost = 0.0005 ether;
+    uint public cost = 0.0000001 ether;
+
+    mapping(address => bool) public whitelist;
 
     event ReceivedNFT(
         uint16 _srcChainId,
@@ -32,12 +34,16 @@ contract ToolflyCollection is Ownable, ERC721URIStorage, NonblockingLzApp {
         cost = _cost;
     }
 
-    function setDefaultTokenURI(string memory _defaultTokenURI) public onlyOwner {
-        defaultTokenURI = _defaultTokenURI;
+    function setDefaultTokenURI(string memory newDefaultTokenURI) public onlyOwner {
+        defaultTokenURI = newDefaultTokenURI;
+    }
+
+    function setWhitelist(address user, bool isWhitelisted) public onlyOwner {
+        whitelist[user] = isWhitelisted;
     }
 
     function mint() external payable {
-        if (msg.value < cost) revert NotPaidMint();
+        if (msg.value < cost && !whitelist[msg.sender]) revert NotPaidMint();
 
         uint256 newItemId = uint(keccak256(abi.encodePacked(counter, block.prevrandao, block.timestamp))) % 10000000;
         _mint(msg.sender, newItemId);
