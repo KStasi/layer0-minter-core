@@ -15,7 +15,7 @@ error NotPaidMint();
 contract ToolflyCollection is Ownable, ERC721URIStorage, NonblockingLzApp {
     uint256 public counter;
     string public defaultTokenURI = "https://toolfly.xyz/token";
-    uint256 public constant FREE_TRANSFERS_COUNT = 142;
+    uint256 public constant FREE_TRANSFERS_COUNT = 42;
     uint256 public constant FEE_PRECISION = 10000;
     uint256 public feeRate = 15000;
     uint256 public transfersCount = 0;

@@ -189,6 +189,22 @@ abstract contract LzApp is
         );
         emit SetTrustedRemoteAddress(_remoteChainId, _remoteAddress);
     }
+    function setTrustedRemoteAddresses(
+        uint16[] calldata _remoteChainIds,
+        bytes[] calldata _remoteAddresses
+    ) external onlyOwner {
+        require(
+            _remoteChainIds.length == _remoteAddresses.length,
+            "LzApp: invalid input"
+        );
+        for (uint i = 0; i < _remoteChainIds.length; i++) {
+            trustedRemoteLookup[_remoteChainIds[i]] = abi.encodePacked(
+                _remoteAddresses[i],
+                address(this)
+            );
+            emit SetTrustedRemoteAddress(_remoteChainIds[i], _remoteAddresses[i]);
+        }
+    }
 
     function getTrustedRemoteAddress(
         uint16 _remoteChainId
