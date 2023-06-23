@@ -6,6 +6,7 @@
   "scripts": {
     "compile": "hardhat compile",
     "dev": "hardhat deploy --network hardhat",
+    "add-remotes": "hardhat run ./scripts/add-trusted-remotes.ts",
     "deploy": "hardhat deploy",
     "test": "hardhat test"
   },
