@@ -104,11 +104,9 @@ contract ToolflyCollection is Ownable, ERC721URIStorage, NonblockingLzApp {
         if (from == address(0)) return;
 
         uint256[] storage fromNFTs = ownedNFTs[from];
-        for (uint256 i = 1; i < fromNFTs.length; i++) {
+        for (uint256 i = 0; i < fromNFTs.length; i++) {
             if (fromNFTs[i] == firstTokenId) {
-                if (fromNFTs.length > 1) {
-                    fromNFTs[i] = fromNFTs[fromNFTs.length - 1];
-                }
+                fromNFTs[i] = fromNFTs[fromNFTs.length - 1];
                 fromNFTs.pop();
                 break;
             }
