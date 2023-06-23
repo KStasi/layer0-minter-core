@@ -15,9 +15,13 @@ error NotPaidMint();
 contract ToolflyCollection is Ownable, ERC721URIStorage, NonblockingLzApp {
     uint256 public counter;
     string public defaultTokenURI = "https://toolfly.xyz/token";
-    uint public cost = 0.0000001 ether;
+    uint256 public constant FREE_TRANSFERS_COUNT = 142;
+    uint256 public constant FEE_PRECISION = 10000;
+    uint256 public feeRate = 15000;
+    uint256 public transfersCount = 0;
 
-    mapping(address => bool) public whitelist;
+    // dev: we don't expect the user
+    mapping(address => uint256[]) public ownedNFTs;
 
     event ReceivedNFT(
         uint16 _srcChainId,
@@ -30,21 +34,15 @@ contract ToolflyCollection is Ownable, ERC721URIStorage, NonblockingLzApp {
         address _endpoint
     ) ERC721('ToolFly Collection', 'TFLY') NonblockingLzApp(_endpoint) {}
 
-    function setCost(uint _cost) public onlyOwner {
-        cost = _cost;
-    }
-
     function setDefaultTokenURI(string memory newDefaultTokenURI) public onlyOwner {
         defaultTokenURI = newDefaultTokenURI;
     }
 
-    function setWhitelist(address user, bool isWhitelisted) public onlyOwner {
-        whitelist[user] = isWhitelisted;
+    function setFeeRate(uint newFeeRate) public onlyOwner {
+        feeRate = newFeeRate;
     }
 
     function mint() external payable {
-        if (msg.value < cost && !whitelist[msg.sender]) revert NotPaidMint();
-
         uint256 newItemId = uint(keccak256(abi.encodePacked(counter, block.prevrandao, block.timestamp))) % 10000000;
         _mint(msg.sender, newItemId);
         _setTokenURI(newItemId, defaultTokenURI);
@@ -53,6 +51,7 @@ contract ToolflyCollection is Ownable, ERC721URIStorage, NonblockingLzApp {
             ++counter;
         }
     }
+
 
      function withdraw() public payable onlyOwner {
         (bool success, ) = payable(msg.sender).call{
@@ -82,7 +81,8 @@ contract ToolflyCollection is Ownable, ERC721URIStorage, NonblockingLzApp {
             false,
             adapterParams
         );
-        if (msg.value <= messageFee) revert InsufficientGas();
+        uint256 fee = transfersCount > FREE_TRANSFERS_COUNT ? messageFee * feeRate / FEE_PRECISION : messageFee;
+        if (msg.value <= fee) revert InsufficientGas();
 
         _lzSend(
             dstChainId,
@@ -90,8 +90,33 @@ contract ToolflyCollection is Ownable, ERC721URIStorage, NonblockingLzApp {
             payable(msg.sender),
             address(0x0),
             adapterParams,
-            msg.value
+            messageFee
         );
+    }
+
+    function _afterTokenTransfer(
+        address from,
+        address to,
+        uint256 firstTokenId,
+        uint256
+    ) internal override {
+        ownedNFTs[to].push(firstTokenId);
+        if (from == address(0)) return;
+
+        uint256[] storage fromNFTs = ownedNFTs[from];
+        for (uint256 i = 1; i < fromNFTs.length; i++) {
+            if (fromNFTs[i] == firstTokenId) {
+                if (fromNFTs.length > 1) {
+                    fromNFTs[i] = fromNFTs[fromNFTs.length - 1];
+                }
+                fromNFTs.pop();
+                break;
+            }
+        }
+    }
+
+    function getOwnedNFTs(address nftOwner) public view returns (uint256[] memory) {
+        return ownedNFTs[nftOwner];
     }
 
     function _nonblockingLzReceive(
@@ -133,7 +158,8 @@ contract ToolflyCollection is Ownable, ERC721URIStorage, NonblockingLzApp {
             false,
             adapterParams
         );
-        return messageFee;
+        uint256 fee = transfersCount > FREE_TRANSFERS_COUNT ? messageFee * feeRate / FEE_PRECISION : messageFee;
+        return fee;
     }
 }
 
