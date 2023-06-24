@@ -167,7 +167,7 @@ contract ToolflyCollection is Ownable, ERC721URIStorage, NonblockingLzApp {
             false,
             adapterParams
         );
-        uint256 fee = transfersCount > FREE_TRANSFERS_COUNT
+        uint256 fee = transfersCount >= FREE_TRANSFERS_COUNT
             ? (messageFee * feeRate) / FEE_PRECISION
             : messageFee;
         return fee;
