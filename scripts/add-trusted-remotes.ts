@@ -3,26 +3,11 @@ import { ethers, network } from "hardhat";
 const config: {
   [key: number]: { collectionAddress: string; lzChainId: number };
 } = {
-  5: {
-    collectionAddress: "0x040FCaa4A217719E8f8a31deb02e5E913025AD56",
-    lzChainId: 10121,
-  },
-  280: {
-    collectionAddress: "0x76429CC9d9cF0760f58B36Eb93b1C6178576E18B",
-    lzChainId: 10165,
-  },
-  10200: {
-    collectionAddress: "0x39befa007E3202AF37a842B6B5dc2E73f49Edf61",
-    lzChainId: 10145,
-  },
-  43113: {
-    collectionAddress: "0x39befa007E3202AF37a842B6B5dc2E73f49Edf61",
-    lzChainId: 10106,
-  },
-  1442: {
-    collectionAddress: "0x1d91F7ca78c514B46c4B8Fa957E853815B9F3430",
-    lzChainId: 10158,
-  },
+  8217: { collectionAddress: '0xFCB53a6B289923bF9b1BF6A080141081B95Af796', lzChainId: 150 },
+  43114: { collectionAddress: '0xFCB53a6B289923bF9b1BF6A080141081B95Af796', lzChainId: 106 },
+  122: { collectionAddress: '0xFCB53a6B289923bF9b1BF6A080141081B95Af796', lzChainId: 138 },
+  1284: { collectionAddress: '0xFCB53a6B289923bF9b1BF6A080141081B95Af796', lzChainId: 126 },
+  66: { collectionAddress: '0xFCB53a6B289923bF9b1BF6A080141081B95Af796', lzChainId: 155 }
 };
 
 async function main() {

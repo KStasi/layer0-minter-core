@@ -127,6 +127,46 @@ const config: HardhatUserConfig = {
       tags: ["polygonZkSyncTestnet"],
       chainId: 1442,
     },
+    klaytn: {
+      live: true,
+      url: "https://1rpc.io/klay",
+      saveDeployments: true,
+      accounts: [process.env.PRIVATE_KEY || ""],
+      tags: ["klaytn"],
+      chainId: 8217,
+    },
+    avalanche: {
+      live: true,
+      url: "https://avalanche-c-chain.publicnode.com",
+      saveDeployments: true,
+      accounts: [process.env.PRIVATE_KEY || ""],
+      tags: ["klaytn"],
+      chainId: 43114,
+    },
+    fuse: {
+      live: true,
+      url: "https://fuse-mainnet.chainstacklabs.com",
+      saveDeployments: true,
+      accounts: [process.env.PRIVATE_KEY || ""],
+      tags: ["fuse"],
+      chainId: 122,
+    },
+    moonbeam: {
+      live: true,
+      url: "https://1rpc.io/glmr",
+      saveDeployments: true,
+      accounts: [process.env.PRIVATE_KEY || ""],
+      tags: ["moonbeam"],
+      chainId: 1284,
+    },
+    okx: {
+      live: true,
+      url: "https://exchainrpc.okex.org",
+      saveDeployments: true,
+      accounts: [process.env.PRIVATE_KEY || ""],
+      tags: ["okx"],
+      chainId: 66,
+    }
   },
   namedAccounts: {
     deployer: 0,
@@ -142,6 +182,11 @@ const config: HardhatUserConfig = {
       65: "0xae92d5aD7583AD66E49A0c67BAd18F6ba52dDDc1",
       1442: "0x6aB5Ae6822647046626e83ee6dB8187151E1d5ab",
       155: "0x6aB5Ae6822647046626e83ee6dB8187151E1d5ab",
+      8217:"0x9740FF91F1985D8d2B71494aE1A2f723bb3Ed9E4",
+      43114:"0x3c2269811836af69497E5F486A85D7316753cf62",
+      122:"0x9740FF91F1985D8d2B71494aE1A2f723bb3Ed9E4",
+      1284:"0x9740FF91F1985D8d2B71494aE1A2f723bb3Ed9E4",
+      66:"0x9740FF91F1985D8d2B71494aE1A2f723bb3Ed9E4"
     },
   },
 };
